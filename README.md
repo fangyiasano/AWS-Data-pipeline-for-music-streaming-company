@@ -59,4 +59,4 @@ Ensure you have the following installed and configured:
 
 ### 1. Initiating the Airflow Web Server  
 ### 2. Configuring connections in the Airflow Web Server UI
-After logging in, go to Admin > Connections to set up the necessary connections, such as aws_credentials and redshift. Be sure to launch your Redshift cluster through the AWS console. Once these steps are complete, trigger your DAG to verify that all tasks execute successfully.
+After logging in, go to Admin > Connections to set up the necessary connections, such as aws_credentials and redshift. Be sure to launch the Redshift cluster through the AWS console. Once these steps are complete, trigger your DAG to verify that all tasks execute successfully.
