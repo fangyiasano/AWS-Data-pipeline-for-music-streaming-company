@@ -2,34 +2,61 @@
 
 ## Project Overview
 
-The focus for this project was on utilizing Apache Airflow to orchestrate and monitor data warehouse ETL pipelines, ensuring smooth and efficient data flow from source to storage, and maintaining the high quality of data for subsequent analysis.
+This project leverages Apache Airflow to automate and optimize the monitoring of ETL pipelines within a music streaming company’s data warehouse on Amazon Redshift. The goal is to create high-quality, dynamic data pipelines that facilitate effective monitoring, support seamless data backfilling, and enforce stringent data quality checks.
 
-## Diving Into the Data
+Key operations include extracting JSON-formatted user activity logs and song metadata from S3, transforming this data into a structured format in Redshift, and performing comprehensive post-load quality checks to ensure data integrity and reliability.
 
-The project revolves around two JSON data sources - logs detailing user activity in the app and metadata about songs users listen to. This data is hosted on Amazon S3 and the objective is to process and store this data in a Redshift data warehouse.
+## Features
 
-## Approach & Implementation
+**Dynamic and Reusable Tasks**: Using Airflow's DAGs to create flexible and modular tasks.
+**Data Quality Assurance**: Implementing checks to validate the integrity and accuracy of the data warehouse after ETL operations.
+**Backfill Capability**: Designed to handle backfills effectively, ensuring data completeness for historical analysis.
+**Comprehensive Monitoring**: Utilizing Airflow's UI to monitor pipeline operations and performance.
 
-### 1. Data Analysis & Transfer
+## Datasets
 
-Initially, I spent time understanding the structure and contents of the two JSON data sources. Subsequently, I created my own S3 directories and transferred the data from the provided sources to my own S3 bucket using AWS CLI. 
+Two main datasets are used in this project:
 
-### 2. Airflow DAG Configuration
+**Log Data**: JSON logs that capture user activity on the music streaming company’s app.
+**Song Data**: JSON metadata that provides information about the songs users listen to.
 
-The next step was to configure the Directed Acyclic Graph (DAG) in Apache Airflow. This involved setting parameters to control the DAG's behavior such as enabling task retries on failures, ensuring no dependency on past runs, and turning off catchup.
+## Components
 
-### 3. Airflow Operators
+### 1. DAG Configuration
 
-The crux of the project involved creating four custom Airflow operators to automate the ETL process:
+- **Default Parameters**:
+  - No dependencies on past runs.
+  - Tasks retry 3 times on failure.
+  - Retries happen every 5 minutes.
+  - Catchup is turned off.
+  - No email notifications on retries.
 
-- **Stage Operator**: This operator was responsible for loading the JSON files from S3 to Redshift.
-- **Fact and Dimension Operators**: I developed these operators to handle data transformations and loading using SQL queries.
-- **Data Quality Operator**: To ensure the integrity of the data, this operator performed checks on the transformed data.
+- **Task Dependencies**: 
+  The tasks are linked to form a coherent data flow as outlined in the image below.
+![dag_graph](https://github.com/user-attachments/assets/9e1eb3a5-6d35-4161-9707-25f7832d3914)
 
-### 4. Data Quality Checks
+### 2. Custom Operators
 
-Finally, to ensure the quality of data, I incorporated tests to catch any discrepancies in the datasets after the ETL process was complete.
+- **Stage Operator**: 
+  This operator is responsible for loading JSON files from S3 into Amazon Redshift. It generates and executes a SQL COPY statement based on the parameters you provide and can differentiate between different types of JSON files. Additionally, it supports loading timestamped files based on execution time, allowing for the backfilling of historical data.
 
-## Conclusion & Learning
+- **Fact and Dimension Operators**: 
+ These operators are used for data transformations. You can provide them with a SQL statement, a target database, and an optional target table. For dimension tables, it uses the truncate-insert method to update data and allows switching between different insert modes. For fact tables, it supports appending new data without removing existing records.
 
-This project was a deep dive into building automated, robust, and dynamic data pipelines using Apache Airflow. Not only did I get to develop reusable tasks and operators, but I also had the chance to ensure data quality through thorough checks.
+### 3. Data Quality Checks
+
+- **Data Quality Operator**:
+ This operator is used to check the quality of the data. It validates the data using SQL test cases and expected results. If the results do not meet expectations, it raises an exception and initiates task retries and eventual failure.
+
+## Prerequisites
+Ensure you have the following installed and configured:
+
+- Python 3.6 or higher
+- Apache Airflow 2.x
+- Access to AWS services including S3 and Redshift
+
+## Implementation
+
+### 1. Initiating the Airflow Web Server
+### 2. Configuring connections in the Airflow Web Server UI
+After logging in, go to Admin > Connections to set up the necessary connections, such as aws_credentials and redshift. Be sure to launch your Redshift cluster through the AWS console. Once these steps are complete, trigger your DAG to verify that all tasks execute successfully.
