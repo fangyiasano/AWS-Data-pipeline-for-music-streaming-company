@@ -8,16 +8,16 @@ Key operations include extracting JSON-formatted user activity logs and song met
 
 ## Features
 
-**Dynamic and Reusable Tasks**: Using Airflow's DAGs to create flexible and modular tasks.
-**Data Quality Assurance**: Implementing checks to validate the integrity and accuracy of the data warehouse after ETL operations.
-**Backfill Capability**: Designed to handle backfills effectively, ensuring data completeness for historical analysis.
-**Comprehensive Monitoring**: Utilizing Airflow's UI to monitor pipeline operations and performance.
+**Dynamic and Reusable Tasks**: Using Airflow's DAGs to create flexible and modular tasks.  
+**Data Quality Assurance**: Implementing checks to validate the integrity and accuracy of the data warehouse after ETL operations.  
+**Backfill Capability**: Designed to handle backfills effectively, ensuring data completeness for historical analysis.  
+**Comprehensive Monitoring**: Utilizing Airflow's UI to monitor pipeline operations and performance.  
 
 ## Datasets
 
 Two main datasets are used in this project:
 
-**Log Data**: JSON logs that capture user activity on the music streaming company’s app.
+**Log Data**: JSON logs that capture user activity on the music streaming company’s app.  
 **Song Data**: JSON metadata that provides information about the songs users listen to.
 
 ## Components
